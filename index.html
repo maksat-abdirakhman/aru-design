@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aru Design — анкета по наполнению кухни</title>
+<meta name="description" content="Ответьте на несколько вопросов о привычках и хранении — дизайнер предложит решение по внутреннему наполнению кухни.">
+<style>
+  :root{
+    --bg:#12100c;
+    --surface:#1c1813;
+    --surface-2:#241f18;
+    --ink:#ece4d4;
+    --muted:#9c917d;
+    --line:#3a332a;
+    --gold:#c9a35c;
+    --gold-bright:#dfc08a;
+    --gold-dim:#a8834a;
+    --gold-soft:rgba(201,163,92,.14);
+    --radius:14px;
+    --shadow:0 4px 24px rgba(0,0,0,.45);
+    --serif:Georgia,"Times New Roman",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.55;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+
+  /* ---------- header / hero ---------- */
+  header{
+    background:
+      radial-gradient(ellipse 90% 70% at 70% -10%, rgba(201,163,92,.16), transparent 60%),
+      linear-gradient(170deg,#181410 0%,#12100c 100%);
+    border-bottom:1px solid var(--line);
+    color:var(--ink);padding:64px 0 72px;
+  }
+  .logo{
+    font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);
+    margin-bottom:34px;display:flex;align-items:center;gap:14px;
+  }
+  .logo::after{content:"";height:1px;width:56px;background:linear-gradient(90deg,var(--gold),transparent)}
+  h1{
+    font-family:var(--serif);font-size:clamp(30px,5vw,46px);font-weight:600;
+    line-height:1.18;max-width:640px;letter-spacing:.01em;
+  }
+  h1 em{font-style:italic;color:var(--gold-bright)}
+  .hero-sub{margin-top:18px;max-width:560px;color:var(--muted);font-size:17px}
+  .hero-cta{
+    display:inline-block;margin-top:34px;
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold) 55%,var(--gold-dim));
+    color:#1a150e;padding:15px 36px;border-radius:999px;text-decoration:none;
+    font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;
+    box-shadow:0 6px 24px rgba(201,163,92,.25);transition:all .2s;
+  }
+  .hero-cta:hover{box-shadow:0 8px 30px rgba(201,163,92,.4);transform:translateY(-1px)}
+  .hero-steps{display:flex;gap:26px;margin-top:52px;flex-wrap:wrap}
+  .hero-step{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+  .hero-step b{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border-radius:50%;border:1px solid var(--gold-dim);
+    color:var(--gold);font-size:13px;flex:none;font-family:var(--serif);
+  }
+
+  /* ---------- sections ---------- */
+  main{padding:48px 0 80px}
+  section.card{
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:34px 30px;margin-bottom:28px;
+  }
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+  .sec-num{
+    font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.22em;
+    text-transform:uppercase;white-space:nowrap;
+  }
+  h2{font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:.01em}
+  .sec-desc{color:var(--muted);font-size:15px;margin-bottom:10px}
+
+  label.field-label{display:block;font-size:15px;font-weight:600;margin:24px 0 9px;color:var(--ink)}
+  .q-item:first-of-type .field-label{margin-top:16px}
+  input[type=text],input[type=tel],input[type=number],textarea{
+    width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    font-size:15px;font-family:inherit;background:#14110d;color:var(--ink);
+  }
+  input::placeholder,textarea::placeholder{color:#6b6252}
+  input:focus,textarea:focus{outline:2px solid var(--gold-soft);border-color:var(--gold-dim)}
+  textarea{resize:vertical;min-height:90px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+  @media(max-width:600px){.grid2{grid-template-columns:1fr}}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{
+    border:1px solid var(--line);background:#14110d;border-radius:999px;
+    padding:9px 19px;font-size:14.5px;cursor:pointer;user-select:none;transition:all .15s;
+    color:var(--ink);
+  }
+  .chip:hover{border-color:var(--gold-dim);background:var(--gold-soft)}
+  .chip.active{
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold));
+    border-color:var(--gold);color:#1a150e;font-weight:700;
+    box-shadow:0 2px 12px rgba(201,163,92,.3);
+  }
+  .multi-hint{font-size:12.5px;color:var(--muted);margin-top:7px}
+
+  /* progress */
+  .progress-wrap{position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0 8px}
+  .progress-bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+  .progress-fill{
+    height:100%;width:0;border-radius:3px;transition:width .3s;
+    background:linear-gradient(90deg,var(--gold-dim),var(--gold-bright));
+  }
+  .progress-text{font-size:12.5px;color:var(--muted);margin-top:6px;text-align:right;letter-spacing:.04em}
+
+  /* submit */
+  .submit-bar{text-align:center;padding:10px 0 0}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold) 55%,var(--gold-dim));
+    color:#1a150e;border:none;border-radius:999px;
+    padding:17px 46px;font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    cursor:pointer;font-family:inherit;transition:all .2s;
+    box-shadow:0 6px 24px rgba(201,163,92,.25);
+  }
+  .btn-primary:hover{box-shadow:0 8px 30px rgba(201,163,92,.4);transform:translateY(-1px)}
+  .submit-hint{margin-top:16px;font-size:13.5px;color:var(--muted);max-width:480px;margin-left:auto;margin-right:auto}
+
+  /* modal */
+  .modal-back{
+    position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;
+    align-items:flex-start;justify-content:center;padding:30px 16px;z-index:50;overflow-y:auto;
+  }
+  .modal-back.open{display:flex}
+  .modal{
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid var(--line);border-radius:16px;max-width:640px;width:100%;padding:32px 30px;
+    box-shadow:0 24px 80px rgba(0,0,0,.6);
+  }
+  .modal h3{font-family:var(--serif);font-size:22px;margin-bottom:6px;color:var(--gold-bright)}
+  .modal .m-sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+  .summary-box{
+    background:#14110d;border:1px solid var(--line);border-radius:10px;
+    padding:16px;font-size:13.5px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    max-height:340px;overflow-y:auto;margin-bottom:18px;color:#d8cfbd;
+  }
+  .modal-actions{display:flex;flex-wrap:wrap;gap:10px}
+  .m-btn{
+    flex:1;min-width:140px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:12px 16px;border-radius:10px;font-size:14.5px;font-weight:600;cursor:pointer;
+    border:1px solid var(--line);background:#14110d;color:var(--ink);text-decoration:none;font-family:inherit;
+    transition:all .15s;
+  }
+  .m-btn:hover{border-color:var(--gold-dim);color:var(--gold-bright);background:var(--gold-soft)}
+  .m-btn.wa{background:#25d366;border-color:#25d366;color:#0b1a10}
+  .m-btn.wa:hover{background:#1fb857;color:#0b1a10}
+  .m-close{
+    display:block;margin:18px auto 0;background:none;border:none;color:var(--muted);
+    font-size:14px;cursor:pointer;text-decoration:underline;font-family:inherit;
+  }
+  .m-close:hover{color:var(--gold-bright)}
+
+  footer{
+    border-top:1px solid var(--line);padding:30px 0;text-align:center;
+    color:var(--muted);font-size:13px;letter-spacing:.06em;
+  }
+
+  @media print{
+    header,.progress-wrap,.submit-bar,footer,.modal-actions,.m-close{display:none !important}
+    body{background:#fff}
+    .modal-back{position:static;display:block !important;background:none;padding:0}
+    .modal{box-shadow:none;max-width:100%;background:#fff;border:none}
+    .modal h3{color:#000}
+    .summary-box{max-height:none;background:#fff;color:#000;border-color:#ccc}
+    main{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">Aru Design · мебель на заказ</div>
+    <h1>Анкета по внутреннему наполнению <em>вашей кухни</em></h1>
+    <p class="hero-sub">Ответьте на несколько простых вопросов о том, как вы готовите и что где храните — это займёт 3–4 минуты. На основе ответов я предложу решение по наполнению кухни: где будут ящики, полки и механизмы.</p>
+    <a class="hero-cta" href="#start">Начать</a>
+    <div class="hero-steps">
+      <div class="hero-step"><b>1</b> Как вы готовите</div>
+      <div class="hero-step"><b>2</b> Хранение</div>
+      <div class="hero-step"><b>3</b> Техника и мойка</div>
+      <div class="hero-step"><b>4</b> Отправка дизайнеру</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="start">
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">Отвечено: 0 из 18</div>
+  </div>
+
+  <div id="questionSections"></div>
+
+  <!-- Эргономика и опыт -->
+  <section class="card">
+    <div class="sec-head"><span class="sec-num" id="ergoNum">Шаг 4</span><h2>Эргономика и ваш опыт</h2></div>
+    <p class="sec-desc">Рост нужен, чтобы рассчитать комфортную высоту столешницы и верхних шкафов.</p>
+    <div class="grid2">
+      <div>
+        <label class="field-label" for="userHeight">Ваш рост, см</label>
+        <input type="number" id="userHeight" min="100" max="230" placeholder="168">
+      </div>
+      <div>
+        <label class="field-label" for="secondHeight">Рост второго человека, который часто готовит, см</label>
+        <input type="number" id="secondHeight" min="100" max="230" placeholder="182">
+      </div>
+    </div>
+    <label class="field-label" for="prevKitchen">Что было неудобно на прошлой кухне?</label>
+    <textarea id="prevKitchen" placeholder="Например: не хватало рабочей поверхности, дальний угловой шкаф был бесполезен, дверцы били по голове…"></textarea>
+    <label class="field-label" for="refs">Примеры, которые нравятся (ссылки — Pinterest, Instagram, фото)</label>
+    <input type="text" id="refs" placeholder="https://pin.it/…, https://instagram.com/p/…">
+  </section>
+
+  <!-- Контакты -->
+  <section class="card">
+    <div class="sec-head"><span class="sec-num" id="contactNum">Шаг 5</span><h2>Как с вами связаться?</h2></div>
+    <div class="grid2">
+      <div>
+        <label class="field-label" for="cName">Имя *</label>
+        <input type="text" id="cName" placeholder="Айгерим" required>
+      </div>
+      <div>
+        <label class="field-label" for="cPhone">Телефон / WhatsApp *</label>
+        <input type="tel" id="cPhone" placeholder="+7 700 000 00 00" required>
+      </div>
+    </div>
+  </section>
+
+  <div class="submit-bar">
+    <button class="btn-primary" onclick="buildSummary()">Сформировать и отправить анкету</button>
+    <p class="submit-hint">Спасибо за ответы! На основе анкеты будет предложено решение по внутреннему наполнению кухни с учётом удобства использования, логики хранения и ваших привычек.</p>
+  </div>
+</main>
+
+<!-- modal -->
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <h3>Анкета готова ✨</h3>
+    <p class="m-sub">Проверьте сводку и отправьте её дизайнеру удобным способом.</p>
+    <div class="summary-box" id="summaryBox"></div>
+    <div class="modal-actions">
+      <a class="m-btn wa" id="waBtn" target="_blank" rel="noopener">💬 Отправить в WhatsApp</a>
+      <a class="m-btn" id="mailBtn">✉️ На почту</a>
+      <button class="m-btn" onclick="copySummary(this)">📋 Скопировать</button>
+      <button class="m-btn" onclick="window.print()">🖨 Сохранить в PDF</button>
+    </div>
+    <button class="m-close" onclick="document.getElementById('modalBack').classList.remove('open')">Закрыть и вернуться к редактированию</button>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">Aru Design · мебель на заказ · анкета клиента</div>
+</footer>
+
+<script>
+/* ================= настройки дизайнера ================= */
+const DESIGNER_PHONE = "77002494313";            // номер WhatsApp без «+»
+const DESIGNER_EMAIL = "arumubarak77@gmail.com"; // почта дизайнера
+
+/* ================= вопросы ================= */
+const SECTIONS = [
+  {
+    title:"Как вы готовите",
+    desc:"Пара вопросов о ваших привычках — от них зависит вся логика кухни.",
+    questions:[
+      {id:"qCookFreq", q:"Как часто вы готовите?", opts:["Каждый день","Несколько раз в неделю","Редко"]},
+      {id:"qPeople",   q:"Сколько человек пользуются кухней?", opts:["1","2","3–4","5+"]},
+      {id:"qHand",     q:"Тот, кто чаще готовит, — правша или левша?", opts:["Правша","Левша"]},
+      {id:"qPriority", q:"Что для вас важнее?", opts:["Удобство","Баланс","Визуальная эстетика"]},
+    ]
+  },
+  {
+    title:"Хранение",
+    desc:"Где что должно лежать, чтобы всё было под рукой.",
+    questions:[
+      {id:"qPots",    q:"Где удобно хранить кастрюли и сковородки?", opts:["Рядом с варочной","Не принципиально"]},
+      {id:"qTools",   q:"Где хранить кухонные инструменты (лопатки, ложки)?", opts:["В ящике у варочной","Не важно"]},
+      {id:"qDrawers", q:"Что вам удобнее в нижних тумбах?", opts:["Максимум выдвижных ящиков","Комбинация","Полки"]},
+      {id:"qUpper",   q:"Верхние шкафы?", opts:["Полки","Подъёмные механизмы","Не важно"]},
+      {id:"qGrocery", q:"Где удобнее хранить продукты и бакалею?", opts:["Выдвижная колонна (пенал / карго)","Нижние ящики","Верхние шкафы"]},
+      {id:"qCorner",  q:"Угловые шкафы?", opts:["Выдвижные / поворотные механизмы","Обычные полки"]},
+      {id:"qBottles", q:"Бутылки (масло, соусы)?", opts:["Бутылочница","В ящике","Не важно"]},
+      {id:"qReserve", q:"Нужен ли запас хранения «на вырост»?", opts:["Да","Нет"]},
+      {id:"qCeiling", q:"Верхние шкафы по высоте?", opts:["До потолка","Стандартные (с зазором)","На усмотрение дизайнера"]},
+    ]
+  },
+  {
+    title:"Техника и мойка",
+    desc:"Как разместить технику и организовать зону мойки.",
+    questions:[
+      {id:"qDryer",    q:"Сушка для посуды?", opts:["В верхнем шкафу","В нижнем ящике","Не нужна"]},
+      {id:"qOvenPos",  q:"Расположение духовки?", opts:["Классически, под варочной","На уровне груди (в пенале)","Духовка не нужна"]},
+      {id:"qTrash",    q:"Мусор?", opts:["Простое ведро","Выдвижная система","Сортировка","Важно скрыть полностью"]},
+      {id:"qSmallApp", q:"Мелкая техника (чайник, тостер, блендер)?", opts:["Стоит на столешнице","Убирать в шкаф","Комбинированно"]},
+      {id:"qWater",    q:"Под мойкой предусмотреть?", multi:true, opts:["Фильтр питьевой воды","Измельчитель отходов","Ничего из этого"]},
+    ]
+  }
+];
+
+const TOTAL_Q = SECTIONS.reduce((n,s)=>n+s.questions.length, 0);
+
+/* ---------- рендер секций ---------- */
+(function render(){
+  const cont = document.getElementById("questionSections");
+  SECTIONS.forEach((sec,i)=>{
+    const el = document.createElement("section");
+    el.className = "card";
+    el.innerHTML =
+      `<div class="sec-head"><span class="sec-num">Шаг ${i+1}</span><h2>${sec.title}</h2></div>
+       <p class="sec-desc">${sec.desc}</p>` +
+      sec.questions.map(h=>
+        `<div class="q-item">
+           <label class="field-label">${h.q}</label>
+           <div class="chips" id="${h.id}"${h.multi ? " data-multi" : ""}>` +
+             h.opts.map(o=>`<div class="chip" data-val="${o}">${o}</div>`).join("") +
+           `</div>` +
+           (h.multi ? `<div class="multi-hint">Можно выбрать несколько вариантов</div>` : "") +
+         `</div>`
+      ).join("");
+    cont.appendChild(el);
+  });
+  document.getElementById("ergoNum").textContent = "Шаг " + (SECTIONS.length+1);
+  document.getElementById("contactNum").textContent = "Шаг " + (SECTIONS.length+2);
+})();
+
+/* ---------- поведение chips ---------- */
+document.querySelectorAll(".chips").forEach(group=>{
+  const multi = group.hasAttribute("data-multi");
+  group.querySelectorAll(".chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      if(!multi) group.querySelectorAll(".chip").forEach(c=>{ if(c!==chip) c.classList.remove("active"); });
+      chip.classList.toggle("active");
+      updateProgress();
+    });
+  });
+});
+
+function chipVals(id){
+  return [...document.querySelectorAll(`#${id} .chip.active`)].map(c=>c.dataset.val);
+}
+
+function updateProgress(){
+  let answered = 0;
+  SECTIONS.forEach(s=>s.questions.forEach(h=>{ if(chipVals(h.id).length) answered++; }));
+  document.getElementById("progressFill").style.width = (answered/TOTAL_Q*100) + "%";
+  document.getElementById("progressText").textContent = `Отвечено: ${answered} из ${TOTAL_Q}`;
+}
+updateProgress();
+
+/* ---------- сводка ---------- */
+function val(id){ return document.getElementById(id).value.trim(); }
+
+function buildSummary(){
+  const name = val("cName"), phone = val("cPhone");
+  if(!name || !phone){
+    alert("Пожалуйста, укажите имя и телефон — иначе дизайнер не сможет с вами связаться 🙂");
+    document.getElementById("cName").scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+
+  const L = [];
+  L.push("📋 АНКЕТА: НАПОЛНЕНИЕ КУХНИ — Aru Design");
+  L.push("Дата: " + new Date().toLocaleDateString("ru-RU"));
+  L.push("");
+  L.push("👤 Клиент: " + name);
+  L.push("📞 Телефон: " + phone);
+  L.push("");
+
+  SECTIONS.forEach(sec=>{
+    const rows = [];
+    sec.questions.forEach(h=>{
+      const vals = chipVals(h.id);
+      if(vals.length) rows.push("• " + h.q.replace(/\?$/,"") + ": " + vals.join(", "));
+    });
+    if(rows.length){
+      L.push("— " + sec.title.toUpperCase() + " —");
+      rows.forEach(r=>L.push(r));
+      L.push("");
+    }
+  });
+
+  const E = [];
+  if(val("userHeight")) E.push("• Рост: " + val("userHeight") + " см");
+  if(val("secondHeight")) E.push("• Рост второго человека: " + val("secondHeight") + " см");
+  if(val("prevKitchen")) E.push("• Было неудобно раньше: " + val("prevKitchen"));
+  if(val("refs")) E.push("• Референсы: " + val("refs"));
+  if(E.length){
+    L.push("— ЭРГОНОМИКА И ОПЫТ —");
+    E.forEach(r=>L.push(r));
+  }
+
+  const text = L.join("\n");
+  document.getElementById("summaryBox").textContent = text;
+  document.getElementById("waBtn").href = "https://wa.me/" + DESIGNER_PHONE + "?text=" + encodeURIComponent(text);
+  document.getElementById("mailBtn").href = "mailto:" + DESIGNER_EMAIL +
+    "?subject=" + encodeURIComponent("Анкета: наполнение кухни — " + name) +
+    "&body=" + encodeURIComponent(text);
+  document.getElementById("modalBack").classList.add("open");
+}
+
+function copySummary(btn){
+  navigator.clipboard.writeText(document.getElementById("summaryBox").textContent).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = "✅ Скопировано!";
+    setTimeout(()=> btn.textContent = old, 1600);
+  });
+}
+document.getElementById("modalBack").addEventListener("click", e=>{
+  if(e.target === e.currentTarget) e.currentTarget.classList.remove("open");
+});
+</script>
+</body>
+</html>
