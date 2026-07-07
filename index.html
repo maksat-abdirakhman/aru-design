@@ -239,16 +239,16 @@
   </section>
 
   <div class="submit-bar">
-    <button class="btn-primary" onclick="buildSummary()">Отправить анкету в WhatsApp</button>
-    <p class="submit-hint">Откроется WhatsApp с готовым сообщением — останется нажать «отправить». Спасибо за ответы! На основе анкеты будет предложено решение по внутреннему наполнению кухни с учётом удобства использования, логики хранения и ваших привычек.</p>
+    <button class="btn-primary" id="submitBtn" onclick="buildSummary()">Отправить анкету</button>
+    <p class="submit-hint">Спасибо за ответы! Анкета будет передана дизайнеру, и на её основе будет предложено решение по внутреннему наполнению кухни с учётом удобства использования, логики хранения и ваших привычек.</p>
   </div>
 </main>
 
 <!-- modal -->
 <div class="modal-back" id="modalBack">
   <div class="modal">
-    <h3>Анкета готова ✨</h3>
-    <p class="m-sub">Сейчас откроется WhatsApp с готовым сообщением — просто нажмите в нём «отправить». Если WhatsApp не открылся, воспользуйтесь кнопками ниже.</p>
+    <h3 id="mTitle">Анкета готова ✨</h3>
+    <p class="m-sub" id="mSub">Проверьте сводку и отправьте её дизайнеру удобным способом.</p>
     <div class="summary-box" id="summaryBox"></div>
     <div class="modal-actions">
       <a class="m-btn wa" id="waBtn" target="_blank" rel="noopener">💬 Отправить в WhatsApp</a>
@@ -268,6 +268,7 @@
 /* ================= настройки дизайнера ================= */
 const DESIGNER_PHONE = "77002494313";            // номер WhatsApp без «+»
 const DESIGNER_EMAIL = "arumubarak77@gmail.com"; // почта дизайнера
+var SHEET_URL = "";                              // URL веб-приложения Google Apps Script (запись анкет в таблицу)
 
 /* ================= вопросы ================= */
 const SECTIONS = [
@@ -409,7 +410,34 @@ function buildSummary(){
     "?subject=" + encodeURIComponent("Анкета: наполнение кухни — " + name) +
     "&body=" + encodeURIComponent(text);
   document.getElementById("modalBack").classList.add("open");
-  window.open(waUrl, "_blank"); // сразу открываем WhatsApp; окно со сводкой остаётся как запасной вариант
+
+  if(SHEET_URL){
+    // собираем ответы в объект «колонка → значение» и пишем строкой в Google Таблицу
+    const data = {
+      "Дата": new Date().toLocaleString("ru-RU"),
+      "Имя": name,
+      "Телефон": phone,
+    };
+    SECTIONS.forEach(sec=>sec.questions.forEach(h=>{ data[h.q] = chipVals(h.id).join(", "); }));
+    data["Рост, см"] = val("userHeight");
+    data["Рост второго, см"] = val("secondHeight");
+    data["Что было неудобно раньше"] = val("prevKitchen");
+    data["Референсы"] = val("refs");
+
+    const mTitle = document.getElementById("mTitle");
+    const mSub = document.getElementById("mSub");
+    mTitle.textContent = "Отправляем анкету…";
+    mSub.textContent = "Секундочку, записываем ваши ответы.";
+    fetch(SHEET_URL, {method:"POST", mode:"no-cors", body: JSON.stringify(data)})
+      .then(()=>{
+        mTitle.textContent = "✅ Анкета отправлена!";
+        mSub.textContent = "Ответы записаны, дизайнер свяжется с вами. Ниже — копия анкеты: при желании можете продублировать её в WhatsApp или сохранить себе.";
+      })
+      .catch(()=>{
+        mTitle.textContent = "Не получилось отправить автоматически";
+        mSub.textContent = "Похоже, нет соединения. Пожалуйста, отправьте анкету одной из кнопок ниже — например, в WhatsApp.";
+      });
+  }
 }
 
 function copySummary(btn){
