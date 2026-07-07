@@ -239,8 +239,8 @@
   </section>
 
   <div class="submit-bar">
-    <button class="btn-primary" onclick="buildSummary()">Сформировать и отправить анкету</button>
-    <p class="submit-hint">Спасибо за ответы! На основе анкеты будет предложено решение по внутреннему наполнению кухни с учётом удобства использования, логики хранения и ваших привычек.</p>
+    <button class="btn-primary" onclick="buildSummary()">Отправить анкету в WhatsApp</button>
+    <p class="submit-hint">Откроется WhatsApp с готовым сообщением — останется нажать «отправить». Спасибо за ответы! На основе анкеты будет предложено решение по внутреннему наполнению кухни с учётом удобства использования, логики хранения и ваших привычек.</p>
   </div>
 </main>
 
@@ -248,7 +248,7 @@
 <div class="modal-back" id="modalBack">
   <div class="modal">
     <h3>Анкета готова ✨</h3>
-    <p class="m-sub">Проверьте сводку и отправьте её дизайнеру удобным способом.</p>
+    <p class="m-sub">Сейчас откроется WhatsApp с готовым сообщением — просто нажмите в нём «отправить». Если WhatsApp не открылся, воспользуйтесь кнопками ниже.</p>
     <div class="summary-box" id="summaryBox"></div>
     <div class="modal-actions">
       <a class="m-btn wa" id="waBtn" target="_blank" rel="noopener">💬 Отправить в WhatsApp</a>
@@ -402,12 +402,14 @@ function buildSummary(){
   }
 
   const text = L.join("\n");
+  const waUrl = "https://wa.me/" + DESIGNER_PHONE + "?text=" + encodeURIComponent(text);
   document.getElementById("summaryBox").textContent = text;
-  document.getElementById("waBtn").href = "https://wa.me/" + DESIGNER_PHONE + "?text=" + encodeURIComponent(text);
+  document.getElementById("waBtn").href = waUrl;
   document.getElementById("mailBtn").href = "mailto:" + DESIGNER_EMAIL +
     "?subject=" + encodeURIComponent("Анкета: наполнение кухни — " + name) +
     "&body=" + encodeURIComponent(text);
   document.getElementById("modalBack").classList.add("open");
+  window.open(waUrl, "_blank"); // сразу открываем WhatsApp; окно со сводкой остаётся как запасной вариант
 }
 
 function copySummary(btn){
