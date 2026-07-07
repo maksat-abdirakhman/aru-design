@@ -20,6 +20,23 @@
 
 var SHEET_NAME = "Анкеты";
 
+/**
+ * Диагностика: откройте URL веб-приложения (/exec) в браузере —
+ * увидите название и ссылку таблицы, куда пишутся анкеты, и число записей.
+ */
+function doGet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss ? ss.getSheetByName(SHEET_NAME) : null;
+  var info = {
+    "куда_пишутся_анкеты": ss ? ss.getName() : "ОШИБКА: скрипт не привязан к таблице",
+    "ссылка_на_таблицу": ss ? ss.getUrl() : "создайте скрипт через меню таблицы: Расширения → Apps Script",
+    "вкладка": sh ? SHEET_NAME : "вкладка «" + SHEET_NAME + "» ещё не создана (не было ни одной анкеты)",
+    "записей_анкет": sh ? Math.max(sh.getLastRow() - 1, 0) : 0
+  };
+  return ContentService.createTextOutput(JSON.stringify(info, null, 2))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.waitLock(10000); // защита от одновременной записи двух анкет

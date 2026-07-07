@@ -411,6 +411,9 @@ function buildSummary(){
     "&body=" + encodeURIComponent(text);
   document.getElementById("modalBack").classList.add("open");
 
+  const actionsEl = document.querySelector(".modal-actions");
+  const boxEl = document.getElementById("summaryBox");
+
   if(SHEET_URL){
     // собираем ответы в объект «колонка → значение» и пишем строкой в Google Таблицу
     const data = {
@@ -426,17 +429,24 @@ function buildSummary(){
 
     const mTitle = document.getElementById("mTitle");
     const mSub = document.getElementById("mSub");
+    actionsEl.style.display = "none";
+    boxEl.style.display = "none";
     mTitle.textContent = "Отправляем анкету…";
     mSub.textContent = "Секундочку, записываем ваши ответы.";
     fetch(SHEET_URL, {method:"POST", mode:"no-cors", body: JSON.stringify(data)})
       .then(()=>{
         mTitle.textContent = "✅ Анкета отправлена!";
-        mSub.textContent = "Ответы записаны, дизайнер свяжется с вами. Ниже — копия анкеты: при желании можете продублировать её в WhatsApp или сохранить себе.";
+        mSub.textContent = "Спасибо! Ответы записаны, дизайнер свяжется с вами в ближайшее время.";
       })
       .catch(()=>{
         mTitle.textContent = "Не получилось отправить автоматически";
         mSub.textContent = "Похоже, нет соединения. Пожалуйста, отправьте анкету одной из кнопок ниже — например, в WhatsApp.";
+        actionsEl.style.display = "flex";
+        boxEl.style.display = "block";
       });
+  } else {
+    actionsEl.style.display = "flex";
+    boxEl.style.display = "block";
   }
 }
 
